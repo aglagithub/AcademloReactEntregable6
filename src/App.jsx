@@ -1,15 +1,28 @@
-import './App.css'
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import ProductDetail from "./pages/ProductDetail";
+import Purchases from "./pages/Purchases";
+import Header from "./components/layout/Header";
 
 function App() {
- 
   return (
-    <>
-     <h1 className="text-3xl font-bold underline">
-   entregable 6
-   
- </h1>
-    </>
-  )
+    <main className="grid grid-rows-[auto_1fr] min-h-screen">
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/purchases" element={<Purchases />} />
+
+        {/* <Route element={<ProtectedRoutes />}>
+          <Route path="/pokedex" element={<Pokedex />} />
+          |
+        </Route> */}
+      </Routes>
+    </main>
+  );
 }
 
-export default App
+export default App;
