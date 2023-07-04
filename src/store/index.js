@@ -1,10 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
+import userInfo from "./slices/userInfo.slice";
+;
 
 export default configureStore({
 reducer:{
-    //Aqui es sonde configuramos los estados globales
-
+    //Aqui es donde agregamos los estados globales
+ userInfo
 }
 
 
 })
+ 
