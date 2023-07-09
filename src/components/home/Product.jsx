@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { addProductCart } from "../../store/slices/cart.slice";
+import { useDispatch } from "react-redux";
 
 const Product = ({ product }) => {
   //console.log("Product: ", { product });
-  const handleClickAddProduct = (e) =>{
-     e.preventDefault()
-     console.log("Add product")
-  }
+  const dispatch = useDispatch();
+  const handleClickAddProduct = (e) => {
+    e.preventDefault();
+   
+    const productToAdd = { quantity: 1, productId: product.id }
+    //console.log("Adding product:",productToAdd.productId, ",qty:",productToAdd.quantity)
+  dispatch(addProductCart(productToAdd));
+  };
   return (
     <Link to={`/products/${product.id}`}>
       <div className="h-[200px] overflow-hidden p-4 relative group">

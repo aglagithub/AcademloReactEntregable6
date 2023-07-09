@@ -12,7 +12,7 @@ const Purchases = () => {
     axiosEcommerce
       .get("/purchases", getConfig())
       .then(({ data }) => {
-        console.log(data);
+        //console.log(data);
         const orderPurchases = data.sort(
           (a,b) => {
            return ( new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() )

@@ -5,19 +5,25 @@ import { Link } from "react-router-dom";
 
 import { axiosEcommerce } from "../utils/configAxios";
 import ListProducts from "../components/home/ListProducts";
+import { useDispatch } from "react-redux";
+import { addProductCart } from "../store/slices/cart.slice";
 
-const sliderStyles ={
-  1:"-ml-[0%]",
-  2:"-ml-[100%]",
-  3:"-ml-[200%]"
-}
+const sliderStyles = {
+  1: "-ml-[0%]",
+  2: "-ml-[100%]",
+  3: "-ml-[200%]",
+};
 const ProductDetail = () => {
   //almacena datos de producto
   const [product, setProduct] = useState(null);
   //Similar Products
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  //Despachador
+  const dispatch = useDispatch();
+
   //cantidad de producto
+  //botón "+"
   const [quantity, setQuantity] = useState(1);
   const handleClickPlus = () => {
     setQuantity(quantity + 1);
@@ -31,41 +37,47 @@ const ProductDetail = () => {
 
   //Estado para el slider
   const [imageToShow, setImageToShow] = useState(1);
-  const handleClickNextImage = () =>{
-    if(imageToShow < 3){
-      setImageToShow(imageToShow+1)
-      console.log("image To Show +:",imageToShow)
+  const handleClickNextImage = () => {
+    if (imageToShow < 3) {
+      setImageToShow(imageToShow + 1);
+      console.log("image To Show +:", imageToShow);
     }
-  }
-  const handleClickPreviousImage = () =>{
-    if(imageToShow >1){
-      setImageToShow(imageToShow-1)
-      console.log("image To Show -:",imageToShow)
+  };
+  const handleClickPreviousImage = () => {
+    if (imageToShow > 1) {
+      setImageToShow(imageToShow - 1);
+      console.log("image To Show -:", imageToShow);
     }
-    
-  }
+  };
 
-  //botón "+"
-
+  // Manejador de Botón "Add to cart"
+  const handleClickAddProduct = () => {
+    //console.log("Add to cart pulsed")
+    const productToAdd ={
+      quantity: quantity,
+      productId:product.id,
+    }
+    dispatch(addProductCart(productToAdd));
+  };
 
   //pasa el parametro de la ruta a id
   const { id } = useParams();
 
-  //Trae datos del ´producto
+  //Trae datos del producto
   useEffect(() => {
     axiosEcommerce
       .get(`/products/${id}`)
       .then(({ data }) => {
-        console.log(`Datos del producto: ${id} .`, data);
+        //console.log(`Datos del producto: ${id} .`, data);
         setProduct(data);
-        console.log(product);
+        //console.log(product);
       })
       .catch((err) => {
         "Errores al traer producto", console.log(err);
       });
   }, [id]);
 
-  //Trae produtos de la misma categoría que el producto actual
+  //Trae productos de la misma categoría que el producto actual
   useEffect(() => {
     if (product) {
       axiosEcommerce
@@ -93,7 +105,9 @@ const ProductDetail = () => {
       <section className="grid gap-6 sm:grid-cols-2 items-center">
         {/* Slider */}
         <article className="overflow-hidden relative">
-          <section className={`flex w-[300%] ${sliderStyles[imageToShow]} transition-all duration-200`}>
+          <section
+            className={`flex w-[300%] ${sliderStyles[imageToShow]} transition-all duration-200`}
+          >
             <div className="h-[300px] w-[calc(100%_/3)]">
               <img
                 className="w-full h-full object-contain"
@@ -113,9 +127,19 @@ const ProductDetail = () => {
               ></img>
             </div>
           </section>
-          <button onClick={handleClickPreviousImage} className="absolute top-1/2 left-2 text-2xl bg-red-500 h-[35px] aspect-square rounded-full text-white -translate-y-1/2"><i className='bx bx-chevron-left'></i>  </button>
-          <button onClick={handleClickNextImage} className="absolute top-1/2 right-2 text-2xl bg-red-500 h-[35px] aspect-square rounded-full text-white -translate-y-1/2"> <i className='bx bx-chevron-right'></i> </button>
-
+          <button
+            onClick={handleClickPreviousImage}
+            className="absolute top-1/2 left-2 text-2xl bg-red-500 h-[35px] aspect-square rounded-full text-white -translate-y-1/2"
+          >
+            <i className="bx bx-chevron-left"></i>{" "}
+          </button>
+          <button
+            onClick={handleClickNextImage}
+            className="absolute top-1/2 right-2 text-2xl bg-red-500 h-[35px] aspect-square rounded-full text-white -translate-y-1/2"
+          >
+            {" "}
+            <i className="bx bx-chevron-right"></i>{" "}
+          </button>
         </article>
 
         {/* Detalle del producto */}
@@ -155,7 +179,10 @@ const ProductDetail = () => {
             </article>
           </section>
 
-          <button className="block w-full py-2 bg-red-500 text-white hover:bg-red-600 transition-colors rounded-md">
+          <button
+            onClick={handleClickAddProduct}
+            className="block w-full py-2 bg-red-500 text-white hover:bg-red-600 transition-colors rounded-md"
+          >
             Add to cart <i className="bx bx-cart"></i>
           </button>
           <p className="text-xs">{product?.description}</p>
